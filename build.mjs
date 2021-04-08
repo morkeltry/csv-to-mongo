@@ -3,6 +3,8 @@ import fs from 'fs';
 import csvParseSync from 'csv-parse/lib/sync.js';
 
 import { connect } from './index.mjs';
+// TODO: import dbName
+const dbName = 'myproject';
 
 const source= 'input';
 const collection= 'new collection';
@@ -74,10 +76,20 @@ const importCsv = async (filename, db, options={} )=> {
     // .map(preProcessRecord)
     .map(toDocument)
     .map(preProcessDocument)
-    .forEach(console.log)
+    // .forEach(console.log)
 
   return headers
 }
+
+const db = await connect();
+console.log(Object.keys(db));
+db.db(dbName)
+  .createCollection(collection)
+  .then(res=> console.log('res:',res) )
+  .catch(err=> {
+    if (err.codeName!=='NamespaceExists')
+      console.log(err);    
+  });
 
 const { headers, records } = await importCsv(input, db,
   { 

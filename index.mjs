@@ -23,8 +23,9 @@ const connect = async ({ url, location='local', ip, port, dbName }={} )=> {
   }
   console.log('Connecting to: ', url);
 
-  const db = await MongoClient.connect(url);
+  const db = await new MongoClient(url).connect();
   console.log(`Connected successfully`);  
+  
   return db;  
 }
 
